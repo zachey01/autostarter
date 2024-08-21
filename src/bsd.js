@@ -5,9 +5,11 @@ const exec = require("child_process").exec;
 
 const rcPath = "/usr/local/etc/rc.d";
 
-function enableAutostart(key, command, appPath, callback) {
+function manageAutostart(action, key, command, appPath, callback) {
   const scriptPath = path.join(rcPath, key);
-  const scriptContent = `#!/bin/sh
+
+  if (action === "enable") {
+    const scriptContent = `#!/bin/sh
 #
 # PROVIDE: ${key}
 # REQUIRE: DAEMON
@@ -30,52 +32,30 @@ load_rc_config $name
 run_rc_command "$1"
 `;
 
-  fs.writeFile(scriptPath, scriptContent, { mode: 0o755 }, (err) => {
-    if (err) {
-      callback(err);
-    } else {
-      exec(`sysrc ${key}_enable="YES"`, (error, stdout, stderr) => {
-        if (error) {
-          callback(new Error(stderr));
-        } else {
-          callback(null);
-        }
-      });
-    }
-  });
+    fs.writeFile(scriptPath, scriptContent, { mode: 0o755 }, (err) => {
+      if (err) return callback(err);
+      exec(`sysrc ${key}_enable="YES"`, callback);
+    });
+  } else if (action === "disable") {
+    exec(`sysrc -x ${key}_enable`, (err) => {
+      if (err) return callback(err);
+      fs.unlink(scriptPath, (fsErr) =>
+        callback(fsErr && fsErr.code !== "ENOENT" ? fsErr : null)
+      );
+    });
+  }
 }
 
-function disableAutostart(key, callback) {
-  const scriptPath = path.join(rcPath, key);
-
-  exec(`sysrc -x ${key}_enable`, (error, stdout, stderr) => {
-    if (error) {
-      callback(new Error(stderr));
-    } else {
-      fs.unlink(scriptPath, (err) => {
-        if (err && err.code !== "ENOENT") {
-          callback(err);
-        } else {
-          callback(null);
-        }
-      });
-    }
-  });
-}
-
-function isAutostartEnabled(key, callback) {
-  exec(`sysrc -n ${key}_enable`, (error, stdout, stderr) => {
-    if (error) {
-      callback(new Error(stderr), false);
-    } else {
-      const isEnabled = stdout.trim() === "YES";
-      callback(null, isEnabled);
-    }
+function checkAutostart(key, callback) {
+  exec(`sysrc -n ${key}_enable`, (error, stdout) => {
+    callback(error, stdout.trim() === "YES");
   });
 }
 
 module.exports = {
-  enableAutostart,
-  disableAutostart,
-  isAutostartEnabled,
+  enableAutostart: (key, command, appPath, callback) =>
+    manageAutostart("enable", key, command, appPath, callback),
+  disableAutostart: (key, callback) =>
+    manageAutostart("disable", key, null, null, callback),
+  isAutostartEnabled: checkAutostart,
 };
