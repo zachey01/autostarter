@@ -1,4 +1,4 @@
-# `autostarter`
+# `autostarter` 🚀
 
 `autostarter` is a Node.js module that allows you to enable, disable, and check the autostart status of your applications. With `autostarter`, you can easily manage whether your application starts automatically on system boot.
 
@@ -8,25 +8,25 @@
 ![GitHub issues](https://img.shields.io/github/issues/zachey01/autostarter)
 ![NPM Downloads](https://img.shields.io/npm/dm/autostarter)
 
-## Table of Contents
+## Table of Contents 📚
 
-- [`autostarter`](#autostarter)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
+- [`autostarter` 🚀](#autostarter-)
+  - [Table of Contents 📚](#table-of-contents-)
+  - [Installation 🛠️](#installation-️)
     - [npm](#npm)
     - [yarn](#yarn)
-  - [Simple Usage](#simple-usage)
-  - [API Documentation](#api-documentation)
+  - [Simple Usage 📝](#simple-usage-)
+  - [API Documentation 📖](#api-documentation-)
     - [`enableAutostart(appName, command, path)`](#enableautostartappname-command-path)
     - [`disableAutostart(appName)`](#disableautostartappname)
     - [`isAutostartEnabled(appName)`](#isautostartenabledappname)
-  - [Examples](#examples)
+  - [Examples 💡](#examples-)
     - [Enable Autostart](#enable-autostart)
     - [Disable Autostart](#disable-autostart)
     - [Check Autostart Status](#check-autostart-status)
-  - [Contributing](#contributing)
+  - [Contributing 🤝](#contributing-)
 
-## Installation
+## Installation 🛠️
 
 You can install `autostarter` using either npm or yarn:
 
@@ -42,7 +42,7 @@ npm install autostarter
 yarn add autostarter
 ```
 
-## Simple Usage
+## Simple Usage 📝
 
 Here's a basic example demonstrating how to use the `autostarter` module:
 
@@ -50,17 +50,20 @@ Here's a basic example demonstrating how to use the `autostarter` module:
 const autostarter = require("autostarter");
 
 // Enable autostart for an application
-enableAutostart("myApp", "node myApp.js", "/path/to/app")
+autostarter
+  .enableAutostart("myApp", "node myApp.js", "/path/to/app")
   .then(() => console.log("Autostart enabled"))
   .catch((error) => console.error("Failed to enable autostart:", error));
 
 // Disable autostart for an application
-disableAutostart("myApp")
+autostarter
+  .disableAutostart("myApp")
   .then(() => console.log("Autostart disabled"))
   .catch((error) => console.error("Failed to disable autostart:", error));
 
 // Check if autostart is enabled
-isAutostartEnabled("myApp")
+autostarter
+  .isAutostartEnabled("myApp")
   .then((isEnabled) => {
     if (isEnabled) {
       console.log("Autostart is enabled");
@@ -71,7 +74,7 @@ isAutostartEnabled("myApp")
   .catch((error) => console.error("Failed to check autostart:", error));
 ```
 
-## API Documentation
+## API Documentation 📖
 
 ### `enableAutostart(appName, command, path)`
 
@@ -105,7 +108,7 @@ Checks if autostart is enabled for the specified application.
 
 - **Returns:** `Promise<boolean>`: Resolves with `true` if autostart is enabled, `false` otherwise.
 
-## Examples
+## Examples 💡
 
 ### Enable Autostart
 
@@ -146,6 +149,6 @@ autostarter
   .catch((error) => console.error("Error checking autostart status:", error));
 ```
 
-## Contributing
+## Contributing 🤝
 
 Contributions are welcome! If you have any suggestions, improvements, or bug reports, please submit an issue or pull request on the [GitHub repository](https://github.com/zachey01/autostarter).
